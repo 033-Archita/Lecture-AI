@@ -432,77 +432,38 @@ GROQ_API_KEY = "your_key"
             """)
         return
     
-    # Main tabs - Only Upload and Live Recording
-    tab1, tab2 = st.tabs(["📁 Upload Audio", "🎙️ Live Recording"])
+    # Main tab - Just Upload (Live Recording doesn't work on Streamlit Cloud)
+    st.markdown("### Upload your lecture audio")
     
-    with tab1:
-        st.markdown("### Upload your lecture audio")
-        uploaded_file = st.file_uploader(
-            "Choose an audio file",
-            type=['mp3', 'wav', 'm4a', 'mp4', 'flac', 'ogg'],
-            help="Supported formats: MP3, WAV, M4A, MP4, FLAC, OGG"
-        )
-        
-        if uploaded_file:
-            st.markdown(f'<div class="success-card">✅ File uploaded: <strong>{uploaded_file.name}</strong></div>', 
-                       unsafe_allow_html=True)
-            
-            if st.button("🚀 Generate Notes", key="upload_generate"):
-                with tempfile.NamedTemporaryFile(delete=False, suffix=Path(uploaded_file.name).suffix) as tmp:
-                    tmp.write(uploaded_file.getvalue())
-                    tmp_path = tmp.name
-                
-                try:
-                    success = process_audio_file(tmp_path)
-                    if success:
-                        st.rerun()
-                finally:
-                    if os.path.exists(tmp_path):
-                        os.unlink(tmp_path)
+    st.markdown("""
+        <div class="info-card">
+            <strong>💡 Tip:</strong> You can record audio on your device first, then upload it here.<br>
+            Supported formats: MP3, WAV, M4A, MP4, FLAC, OGG
+        </div>
+    """, unsafe_allow_html=True)
     
-    with tab2:
-        st.markdown("### Record your lecture live")
+    uploaded_file = st.file_uploader(
+        "Choose an audio file",
+        type=['mp3', 'wav', 'm4a', 'mp4', 'flac', 'ogg'],
+        help="Upload a lecture recording"
+    )
+    
+    if uploaded_file:
+        st.markdown(f'<div class="success-card">✅ File uploaded: <strong>{uploaded_file.name}</strong></div>', 
+                   unsafe_allow_html=True)
         
-        st.markdown("""
-            <div class="info-card">
-                <strong>📝 How it works:</strong><br>
-                1. Click the record button below<br>
-                2. Speak your lecture or notes<br>
-                3. Click stop when done<br>
-                4. Choose to process or download the recording
-            </div>
-        """, unsafe_allow_html=True)
-        
-        # Audio recorder component with processing option
-        audio_bytes = st.experimental_audio_input("Record your lecture")
-        
-        if audio_bytes:
-            st.success("✅ Recording complete!")
+        if st.button("🚀 Generate Notes"):
+            with tempfile.NamedTemporaryFile(delete=False, suffix=Path(uploaded_file.name).suffix) as tmp:
+                tmp.write(uploaded_file.getvalue())
+                tmp_path = tmp.name
             
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                if st.button("🚀 Process Recording", key="process_recording"):
-                    # Save audio to temp file
-                    with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as tmp:
-                        tmp.write(audio_bytes.getvalue())
-                        tmp_path = tmp.name
-                    
-                    try:
-                        success = process_audio_file(tmp_path, "recorded")
-                        if success:
-                            st.rerun()
-                    finally:
-                        if os.path.exists(tmp_path):
-                            os.unlink(tmp_path)
-            
-            with col2:
-                st.download_button(
-                    "💾 Download Recording",
-                    audio_bytes,
-                    "recording.wav",
-                    mime="audio/wav"
-                )
+            try:
+                success = process_audio_file(tmp_path)
+                if success:
+                    st.rerun()
+            finally:
+                if os.path.exists(tmp_path):
+                    os.unlink(tmp_path)
     
     # Display notes if available
     if st.session_state.notes:
