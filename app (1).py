@@ -9,253 +9,221 @@ import time
 
 # Page configuration
 st.set_page_config(
-    page_title="LectureAI",
-    page_icon="📚",
+    page_title="LectureAI | Smart Notes",
+    page_icon="🎓",
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# --- ADVANCED UI/UX STYLING ---
+# --- LUXURY UI STYLING ---
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
     
     :root {
-        --primary: #FF6B6B;
-        --secondary: #FF8E72;
-        --dark: #2D3436;
-        --bg: #F8F9FA;
+        --accent: #FF6B6B;
+        --accent-gradient: linear-gradient(135deg, #FF6B6B 0%, #FF8E72 100%);
+        --bg-soft: #FDFCFB;
+        --text-main: #1A1A1A;
+        --glass: rgba(255, 255, 255, 0.8);
     }
 
-    * { font-family: 'Inter', sans-serif; }
+    * { font-family: 'Plus Jakarta Sans', sans-serif; }
     
-    .stApp { background-color: var(--bg); }
+    .stApp { background: var(--bg-soft); }
 
-    /* Clean Header */
-    .main-header {
+    /* Glass Navigation Bar */
+    .nav-bar {
+        position: fixed;
+        top: 0; left: 0; right: 0;
+        height: 70px;
+        background: var(--glass);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 4rem;
+        z-index: 1000;
+    }
+
+    /* Hero Section */
+    .hero {
+        padding: 100px 0 40px 0;
         text-align: center;
-        padding: 3rem 1rem;
+    }
+
+    .hero-title {
+        font-size: 4.5rem;
+        font-weight: 800;
+        letter-spacing: -3px;
+        background: var(--accent-gradient);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0;
+    }
+
+    /* Modern Upload Container */
+    .upload-zone {
         background: white;
-        border-radius: 0 0 40px 40px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        border: 2px dashed #E2E8F0;
+        border-radius: 32px;
+        padding: 4rem !important;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: center;
+    }
+
+    .upload-zone:hover {
+        border-color: var(--accent);
+        box-shadow: 0 20px 40px rgba(255, 107, 107, 0.1);
+        transform: translateY(-4px);
+    }
+
+    /* Content Cards */
+    .note-card {
+        background: white;
+        border-radius: 24px;
+        padding: 2.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid #F1F5F9;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        transition: 0.3s ease;
+    }
+
+    .note-card:hover {
+        box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+    }
+
+    .section-tag {
+        color: var(--accent);
+        font-weight: 700;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* Interactive Elements */
+    .stButton > button {
+        background: var(--accent-gradient) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 14px !important;
+        padding: 0.8rem 2.5rem !important;
+        font-weight: 700 !important;
+        box-shadow: 0 10px 20px rgba(255, 107, 107, 0.2) !important;
+    }
+
+    .keyword-pill {
+        background: #FFF5F5;
+        color: #C53030;
+        padding: 6px 16px;
+        border-radius: 100px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border: 1px solid #FED7D7;
+        margin: 4px;
+        display: inline-block;
+    }
+
+    /* Metric Layout */
+    .metric-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1.5rem;
         margin-bottom: 3rem;
     }
 
-    .app-title {
-        font-size: 3.5rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #FF6B6B 0%, #FF8C42 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        letter-spacing: -1.5px;
-    }
-
-    /* Stats Dashboard Row */
-    .stats-container {
-        display: flex;
-        gap: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
-    .stat-card {
+    .metric-item {
         background: white;
         padding: 1.5rem;
         border-radius: 20px;
-        flex: 1;
-        text-align: center;
-        border: 1px solid rgba(0,0,0,0.05);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-    }
-
-    .stat-value {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--primary);
-    }
-
-    .stat-label {
-        font-size: 0.8rem;
-        color: #636E72;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    /* Note Content Styling */
-    .note-section {
-        background: white;
-        padding: 2.5rem;
-        border-radius: 24px;
-        border-left: 6px solid var(--primary);
-        margin-bottom: 2rem;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.03);
-    }
-
-    .section-title {
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: var(--dark);
-        margin-bottom: 1.5rem;
-    }
-
-    .theory-box {
-        background: #FFF5F5;
-        padding: 1.5rem;
-        border-radius: 15px;
-        border: 1px dashed #FF6B6B;
-        margin: 1rem 0;
-    }
-
-    .example-box {
-        background: #F0FFF4;
-        padding: 1.5rem;
-        border-radius: 15px;
-        border: 1px solid #C6F6D5;
-        font-style: italic;
-    }
-
-    /* File Uploader Customization */
-    [data-testid="stFileUploader"] {
-        background: white;
-        border: 2px dashed #DFE6E9;
-        border-radius: 20px;
-        padding: 3rem !important;
-    }
-
-    /* Buttons */
-    .stButton > button {
-        background: var(--dark) !important;
-        color: white !important;
-        border-radius: 12px !important;
-        padding: 0.6rem 2rem !important;
-        font-weight: 600 !important;
-        transition: 0.3s all !important;
-        border: none !important;
-    }
-
-    .stButton > button:hover {
-        background: var(--primary) !important;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
-    }
-
-    /* Badges */
-    .badge {
-        display: inline-block;
-        padding: 0.4rem 1rem;
-        background: #F1F2F6;
-        color: #57606F;
-        border-radius: 50px;
-        font-size: 0.85rem;
-        margin: 0.25rem;
-        font-weight: 500;
+        text-align: left;
+        border-bottom: 4px solid var(--accent);
     }
     </style>
 """, unsafe_allow_html=True)
 
 def initialize_session_state():
-    if 'page' not in st.session_state: st.session_state.page = 'upload'
-    if 'transcript' not in st.session_state: st.session_state.transcript = None
-    if 'notes' not in st.session_state: st.session_state.notes = None
-    if 'keywords' not in st.session_state: st.session_state.keywords = []
-    if 'file_info' not in st.session_state: st.session_state.file_info = {}
-
-def process_audio_file(file_path, filename):
-    try:
-        progress_text = st.empty()
-        bar = st.progress(0)
-        
-        progress_text.markdown("✨ **Step 1/3:** Transcribing audio...")
-        transcript = transcribe_audio(file_path)
-        bar.progress(40)
-        
-        if not transcript: return False
-        
-        progress_text.markdown("🧠 **Step 2/3:** Analyzing concepts...")
-        keywords = extract_keywords(transcript, max_keywords=6)
-        bar.progress(70)
-        
-        progress_text.markdown("✍️ **Step 3/3:** Formatting smart notes...")
-        notes = generate_notes(transcript)
-        bar.progress(100)
-        
-        st.session_state.transcript = transcript
-        st.session_state.keywords = keywords
-        st.session_state.notes = notes
-        st.session_state.file_info = {
-            'name': filename,
-            'word_count': len(transcript.split()),
-            'reading_time': round(len(transcript.split()) / 200)
-        }
-        
-        st.session_state.page = 'results'
-        st.rerun()
-    except Exception as e:
-        st.error(f"Processing error: {e}")
+    for key, val in {'page': 'upload', 'transcript': None, 'notes': None, 'keywords': [], 'file_info': {}}.items():
+        if key not in st.session_state: st.session_state[key] = val
 
 def upload_page():
-    st.markdown('<div class="main-header"><h1 class="app-title">LectureAI</h1><p style="color: #636E72;">Your personal academic scribe</p></div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero"><h1 class="hero-title">LectureAI</h1><p style="font-size: 1.2rem; color: #64748B;">Turn complex audio into structured knowledge</p></div>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        uploaded_file = st.file_uploader("Upload lecture (MP3, WAV, M4A,MP4)", type=['mp3', 'wav', 'm4a','mp4'], label_visibility="collapsed")
+        st.markdown('<div class="upload-zone">', unsafe_allow_html=True)
+        uploaded_file = st.file_uploader("Drop audio here", type=['mp3', 'wav', 'm4a'], label_visibility="collapsed")
+        st.markdown('</div>', unsafe_allow_html=True)
         
         if uploaded_file:
-            st.info(f"📁 Selected: {uploaded_file.name}")
-            if st.button("Generate My Notes", use_container_width=True):
+            st.markdown(f"<div style='text-align:center; padding: 20px; color: #475569;'>Selected: <b>{uploaded_file.name}</b></div>", unsafe_allow_html=True)
+            if st.button("✨ Transcribe & Analyze", use_container_width=True):
                 with tempfile.NamedTemporaryFile(delete=False, suffix=Path(uploaded_file.name).suffix) as tmp:
                     tmp.write(uploaded_file.getvalue())
-                    process_audio_file(tmp.name, uploaded_file.name)
+                    process_audio_logic(tmp.name, uploaded_file.name)
+
+def process_audio_logic(path, name):
+    with st.status("🚀 Processing Lecture...", expanded=True) as status:
+        st.write("🎙️ Extracting audio...")
+        transcript = transcribe_audio(path)
+        st.write("🔍 Identifying key concepts...")
+        keywords = extract_keywords(transcript)
+        st.write("📝 Generating study notes...")
+        notes = generate_notes(transcript)
+        
+        st.session_state.update({
+            'transcript': transcript, 'keywords': keywords, 'notes': notes,
+            'file_info': {'name': name, 'words': len(transcript.split()), 'time': f"{round(len(transcript.split())/150)}m read"},
+            'page': 'results'
+        })
+        status.update(label="Complete!", state="complete")
+        time.sleep(1)
+        st.rerun()
 
 def results_page():
-    # Top Action Bar
-    t1, t2 = st.columns([5, 1])
-    with t1:
-        st.markdown(f"### 📝 {st.session_state.file_info.get('name')}")
-    with t2:
-        if st.button("New Upload", use_container_width=True):
+    # Sticky header-like action row
+    c1, c2 = st.columns([4, 1])
+    with c1: st.title(f"📖 {st.session_state.file_info['name']}")
+    with c2: 
+        if st.button("Restart", use_container_width=True):
             st.session_state.page = 'upload'
             st.rerun()
 
-    # Dashboard Metrics
-    m1, m2, m3 = st.columns(3)
-    with m1:
-        st.markdown(f'<div class="stat-card"><div class="stat-label">Word Count</div><div class="stat-value">{st.session_state.file_info.get("word_count")}</div></div>', unsafe_allow_html=True)
-    with m2:
-        st.markdown(f'<div class="stat-card"><div class="stat-label">Est. Reading Time</div><div class="stat-value">{st.session_state.file_info.get("reading_time")} min</div></div>', unsafe_allow_html=True)
-    with m3:
-        st.markdown(f'<div class="stat-card"><div class="stat-label">AI Confidence</div><div class="stat-value">High</div></div>', unsafe_allow_html=True)
+    # Metrics Row
+    st.markdown(f"""
+    <div class="metric-grid">
+        <div class="metric-item"><small style='color:#64748B'>WORD COUNT</small><br><b>{st.session_state.file_info['words']}</b></div>
+        <div class="metric-item"><small style='color:#64748B'>READING TIME</small><br><b>{st.session_state.file_info['time']}</b></div>
+        <div class="metric-item"><small style='color:#64748B'>CONCEPTS FOUND</small><br><b>{len(st.session_state.keywords)}</b></div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    # Content Area
-    col_main, col_side = st.columns([3, 1])
-    
+    col_main, col_side = st.columns([2.5, 1], gap="large")
+
     with col_main:
         sections = extract_sections(st.session_state.notes)
-        for title, content in sections.items():
-            st.markdown(f'<div class="note-section"><div class="section-title">{title}</div>', unsafe_allow_html=True)
-            
-            # Smart split for Theory/Example
-            if "Theory:" in content:
-                parts = content.split("Example:")
-                theory = parts[0].replace("Theory:", "").strip()
-                st.markdown(f'<div class="theory-box"><b>💡 Core Concept:</b><br>{theory}</div>', unsafe_allow_html=True)
-                if len(parts) > 1:
-                    example = parts[1].strip()
-                    st.markdown(f'<div class="example-box"><b>📝 Case/Example:</b><br>{example}</div>', unsafe_allow_html=True)
-            else:
-                st.markdown(content)
-            st.markdown('</div>', unsafe_allow_html=True)
+        for i, (title, content) in enumerate(sections.items()):
+            st.markdown(f"""
+            <div class="note-card">
+                <span class="section-tag">TOPIC {i+1}</span>
+                <h2 style='margin-top:0;'>{title}</h2>
+                <div style='color: #334155; line-height: 1.7;'>{content.replace('Theory:', '<b>💡 Theory:</b>').replace('Example:', '<br><b>✨ Example:</b>')}</div>
+            </div>
+            """, unsafe_allow_html=True)
 
     with col_side:
-        st.markdown("##### 🏷️ Key Concepts")
-        for kw in st.session_state.keywords:
-            st.markdown(f'<span class="badge">{kw}</span>', unsafe_allow_html=True)
+        st.markdown("#### 🏷️ Key Concepts")
+        kw_html = "".join([f'<span class="keyword-pill">{kw}</span>' for kw in st.session_state.keywords])
+        st.markdown(kw_html, unsafe_allow_html=True)
         
-        st.divider()
-        st.markdown("##### 💾 Export")
-        st.download_button("Download Markdown", st.session_state.notes, "notes.md", use_container_width=True)
+        st.markdown("<br>#### 📁 Export", unsafe_allow_html=True)
+        st.download_button("Export as PDF/Markdown", st.session_state.notes, file_name="notes.md", use_container_width=True)
         
-        with st.expander("📜 Raw Transcript"):
-            st.caption(st.session_state.transcript)
+        with st.expander("🔍 View Raw Transcript"):
+            st.write(st.session_state.transcript)
 
 def main():
     initialize_session_state()
