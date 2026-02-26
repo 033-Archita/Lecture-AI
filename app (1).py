@@ -15,684 +15,250 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Glassmorphism Theme with Coral/Orange
+# --- ADVANCED UI/UX STYLING ---
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     
-    * {
-        font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    :root {
+        --primary: #FF6B6B;
+        --secondary: #FF8E72;
+        --dark: #2D3436;
+        --bg: #F8F9FA;
     }
+
+    * { font-family: 'Inter', sans-serif; }
     
-    /* Hide Streamlit branding */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    
-    /* Animated gradient background */
-    .main {
-        background: linear-gradient(135deg, #FFF9F0 0%, #FFE8D6 50%, #FFD7C4 100%);
-        min-height: 100vh;
-    }
-    
-    .block-container {
-        padding: 1.5rem 2rem;
-        max-width: 1600px;
-    }
-    
-    /* Glassmorphism Header */
-    .glass-header {
-        background: rgba(255, 255, 255, 0.25);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-radius: 24px;
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        padding: 2.5rem 3rem;
+    .stApp { background-color: var(--bg); }
+
+    /* Clean Header */
+    .main-header {
         text-align: center;
-        margin-bottom: 2rem;
-        box-shadow: 0 8px 32px rgba(255, 107, 107, 0.15);
+        padding: 3rem 1rem;
+        background: white;
+        border-radius: 0 0 40px 40px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        margin-bottom: 3rem;
     }
-    
+
     .app-title {
         font-size: 3.5rem;
         font-weight: 800;
-        background: linear-gradient(135deg, #FF6B6B 0%, #FF8E72 50%, #FF8C42 100%);
+        background: linear-gradient(135deg, #FF6B6B 0%, #FF8C42 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        margin: 0;
-        letter-spacing: -0.03em;
+        letter-spacing: -1.5px;
     }
-    
-    .app-subtitle {
-        font-size: 1.15rem;
-        color: #2D3436;
-        margin-top: 0.75rem;
-        font-weight: 400;
-        opacity: 0.85;
-    }
-    
-    /* Glass Upload Card */
-    .glass-card {
-        background: rgba(255, 255, 255, 0.3);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        padding: 3rem;
-        margin: 2rem auto;
-        max-width: 900px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    }
-    
-    .glass-card h3 {
-        color: #2D3436;
-        font-size: 1.6rem;
-        font-weight: 600;
-        margin-bottom: 1.5rem;
-        text-align: center;
-    }
-    
-    /* File uploader - glassmorphism style */
-    [data-testid="stFileUploader"] {
-        background: rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 2px dashed #FF8E72;
-        border-radius: 16px;
-        padding: 3rem 2rem;
-        transition: all 0.3s ease;
-    }
-    
-    [data-testid="stFileUploader"]:hover {
-        background: rgba(255, 255, 255, 0.5);
-        border-color: #FF6B6B;
-        transform: translateY(-2px);
-    }
-    
-    [data-testid="stFileUploader"] label {
-        color: #2D3436 !important;
-        font-weight: 500;
-        font-size: 1.05rem;
-    }
-    
-    /* Buttons with gradient */
-    .stButton > button {
-        background: linear-gradient(135deg, #FF6B6B 0%, #FF8C42 100%);
-        color: white;
-        border: none;
-        border-radius: 16px;
-        padding: 1rem 3rem;
-        font-size: 1.15rem;
-        font-weight: 600;
-        width: 100%;
-        max-width: 400px;
-        margin: 2rem auto;
-        display: block;
-        transition: all 0.3s ease;
-        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.35);
-        cursor: pointer;
-    }
-    
-    .stButton > button:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 12px 35px rgba(255, 107, 107, 0.45);
-    }
-    
-    /* Info cards with glass effect */
-    .info-glass {
-        background: rgba(255, 235, 205, 0.4);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-left: 4px solid #FF8C42;
-        padding: 1.25rem;
-        border-radius: 12px;
-        margin: 1.5rem 0;
-        color: #2D3436;
-        border: 1px solid rgba(255, 140, 66, 0.2);
-    }
-    
-    .success-glass {
-        background: rgba(200, 255, 200, 0.4);
-        backdrop-filter: blur(10px);
-        border-left: 4px solid #51CF66;
-        padding: 1.25rem;
-        border-radius: 12px;
-        margin: 1.5rem 0;
-        color: #2D3436;
-        border: 1px solid rgba(81, 207, 102, 0.2);
-    }
-    
-    .error-glass {
-        background: rgba(255, 200, 200, 0.4);
-        backdrop-filter: blur(10px);
-        border-left: 4px solid #FF6B6B;
-        padding: 1.25rem;
-        border-radius: 12px;
-        margin: 1.5rem 0;
-        color: #2D3436;
-        border: 1px solid rgba(255, 107, 107, 0.2);
-    }
-    
-    /* Results page header */
-    .results-glass-header {
-        background: rgba(255, 255, 255, 0.3);
-        backdrop-filter: blur(20px);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        padding: 1.5rem 2rem;
-        margin-bottom: 2rem;
+
+    /* Stats Dashboard Row */
+    .stats-container {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
     }
-    
-    .results-title {
-        font-size: 2rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #FF6B6B 0%, #FF8C42 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin: 0;
-    }
-    
-    /* Sidebar glass cards */
-    .sidebar-glass {
-        background: rgba(255, 255, 255, 0.35);
-        backdrop-filter: blur(15px);
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.5);
+
+    .stat-card {
+        background: white;
         padding: 1.5rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    }
-    
-    .sidebar-title {
-        color: #2D3436;
-        font-size: 1.1rem;
-        font-weight: 600;
-        margin-bottom: 1rem;
-    }
-    
-    /* Keyword badges with glass effect */
-    .keyword-badge {
-        display: inline-block;
-        background: rgba(255, 107, 107, 0.15);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 107, 107, 0.3);
-        color: #FF6B6B;
-        padding: 0.5rem 1rem;
         border-radius: 20px;
-        margin: 0.3rem;
-        font-size: 0.85rem;
-        font-weight: 500;
+        flex: 1;
+        text-align: center;
+        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.02);
     }
-    
-    .keyword-badge-alt {
-        background: rgba(255, 140, 66, 0.15);
-        border: 1px solid rgba(255, 140, 66, 0.3);
-        color: #FF8C42;
-    }
-    
-    /* Topic cards with glass */
-    .topic-glass {
-        background: rgba(255, 255, 255, 0.35);
-        backdrop-filter: blur(15px);
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        padding: 2rem;
-        margin: 1.5rem 0;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    }
-    
-    .topic-header {
-        color: #2D3436;
+
+    .stat-value {
         font-size: 1.5rem;
         font-weight: 700;
-        margin-bottom: 1rem;
-        padding-bottom: 0.75rem;
-        border-bottom: 3px solid #FF8E72;
+        color: var(--primary);
     }
-    
-    .theory-glass {
-        background: rgba(255, 235, 220, 0.5);
-        backdrop-filter: blur(10px);
-        border-left: 4px solid #FF6B6B;
-        padding: 1.25rem;
-        border-radius: 12px;
-        margin: 1rem 0;
-        border: 1px solid rgba(255, 107, 107, 0.2);
-    }
-    
-    .example-glass {
-        background: rgba(255, 245, 230, 0.5);
-        backdrop-filter: blur(10px);
-        border-left: 4px solid #FF8C42;
-        padding: 1.25rem;
-        border-radius: 12px;
-        margin: 1rem 0;
-        font-style: italic;
-        border: 1px solid rgba(255, 140, 66, 0.2);
-    }
-    
-    /* Download buttons */
-    .stDownloadButton > button {
-        background: rgba(81, 207, 102, 0.2);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(81, 207, 102, 0.3);
-        color: #2D3436;
-        border-radius: 12px;
-        padding: 0.75rem 1.5rem;
-        font-weight: 600;
-        transition: all 0.3s ease;
-    }
-    
-    .stDownloadButton > button:hover {
-        background: rgba(81, 207, 102, 0.3);
-        transform: translateY(-2px);
-    }
-    
-    /* Progress bar */
-    .stProgress > div > div {
-        background: linear-gradient(90deg, #FF6B6B 0%, #FF8C42 100%);
-        border-radius: 10px;
-    }
-    
-    /* Stats boxes */
-    .stat-glass {
-        background: rgba(255, 255, 255, 0.35);
-        backdrop-filter: blur(10px);
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        padding: 1.5rem;
-        text-align: center;
-        transition: all 0.3s ease;
-    }
-    
-    .stat-glass:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    }
-    
-    .stat-icon {
-        font-size: 2.5rem;
-        margin-bottom: 0.5rem;
-    }
-    
+
     .stat-label {
-        font-size: 0.95rem;
-        color: #2D3436;
+        font-size: 0.8rem;
+        color: #636E72;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Note Content Styling */
+    .note-section {
+        background: white;
+        padding: 2.5rem;
+        border-radius: 24px;
+        border-left: 6px solid var(--primary);
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+    }
+
+    .section-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 1.5rem;
+    }
+
+    .theory-box {
+        background: #FFF5F5;
+        padding: 1.5rem;
+        border-radius: 15px;
+        border: 1px dashed #FF6B6B;
+        margin: 1rem 0;
+    }
+
+    .example-box {
+        background: #F0FFF4;
+        padding: 1.5rem;
+        border-radius: 15px;
+        border: 1px solid #C6F6D5;
+        font-style: italic;
+    }
+
+    /* File Uploader Customization */
+    [data-testid="stFileUploader"] {
+        background: white;
+        border: 2px dashed #DFE6E9;
+        border-radius: 20px;
+        padding: 3rem !important;
+    }
+
+    /* Buttons */
+    .stButton > button {
+        background: var(--dark) !important;
+        color: white !important;
+        border-radius: 12px !important;
+        padding: 0.6rem 2rem !important;
+        font-weight: 600 !important;
+        transition: 0.3s all !important;
+        border: none !important;
+    }
+
+    .stButton > button:hover {
+        background: var(--primary) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    /* Badges */
+    .badge {
+        display: inline-block;
+        padding: 0.4rem 1rem;
+        background: #F1F2F6;
+        color: #57606F;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        margin: 0.25rem;
         font-weight: 500;
-    }
-    
-    /* Back button */
-    .stButton > button[kind="secondary"] {
-        background: rgba(255, 255, 255, 0.3);
-        backdrop-filter: blur(10px);
-        color: #2D3436;
-        border: 1px solid rgba(255, 107, 107, 0.3);
-        box-shadow: none;
-    }
-    
-    /* Text area (transcript) */
-    .stTextArea textarea {
-        background: rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 140, 66, 0.2);
-        border-radius: 12px;
-        color: #2D3436;
-    }
-    
-    /* Expander */
-    .streamlit-expanderHeader {
-        background: rgba(255, 255, 255, 0.2);
-        backdrop-filter: blur(10px);
-        border-radius: 8px;
-        color: #2D3436;
-        font-weight: 500;
-    }
-    
-    /* Responsive - Laptop friendly */
-    @media (min-width: 1024px) {
-        .block-container {
-            padding: 2rem 4rem;
-        }
-        
-        .glass-card {
-            max-width: 1000px;
-        }
-    }
-    
-    @media (max-width: 768px) {
-        .app-title {
-            font-size: 2.5rem;
-        }
-        
-        .glass-card {
-            padding: 2rem 1.5rem;
-        }
-        
-        .stButton > button {
-            padding: 0.9rem 2rem;
-            font-size: 1rem;
-        }
     }
     </style>
 """, unsafe_allow_html=True)
 
 def initialize_session_state():
-    """Initialize session state"""
-    defaults = {
-        'page': 'upload',
-        'transcript': None,
-        'notes': None,
-        'keywords': [],
-        'processing': False,
-        'file_info': {}
-    }
-    for key, value in defaults.items():
-        if key not in st.session_state:
-            st.session_state[key] = value
-
-def validate_api_keys():
-    """Validate API keys"""
-    required_keys = {
-        'ASSEMBLYAI_API_KEY': 'AssemblyAI',
-        'GROQ_API_KEY': 'Groq'
-    }
-    
-    missing_keys = []
-    for key, name in required_keys.items():
-        try:
-            if key in st.secrets:
-                continue
-        except:
-            pass
-        
-        if os.getenv(key):
-            continue
-        
-        missing_keys.append(name)
-    
-    return missing_keys
+    if 'page' not in st.session_state: st.session_state.page = 'upload'
+    if 'transcript' not in st.session_state: st.session_state.transcript = None
+    if 'notes' not in st.session_state: st.session_state.notes = None
+    if 'keywords' not in st.session_state: st.session_state.keywords = []
+    if 'file_info' not in st.session_state: st.session_state.file_info = {}
 
 def process_audio_file(file_path, filename):
-    """Process audio and redirect to results"""
     try:
-        progress_bar = st.progress(0)
-        status = st.empty()
+        progress_text = st.empty()
+        bar = st.progress(0)
         
-        # Transcription
-        status.info("🎙️ Transcribing audio...")
-        progress_bar.progress(30)
-        
+        progress_text.markdown("✨ **Step 1/3:** Transcribing audio...")
         transcript = transcribe_audio(file_path)
+        bar.progress(40)
         
-        if not transcript or len(transcript.strip()) < 50:
-            st.error("⚠️ Transcription failed or insufficient content.")
-            return False
+        if not transcript: return False
+        
+        progress_text.markdown("🧠 **Step 2/3:** Analyzing concepts...")
+        keywords = extract_keywords(transcript, max_keywords=6)
+        bar.progress(70)
+        
+        progress_text.markdown("✍️ **Step 3/3:** Formatting smart notes...")
+        notes = generate_notes(transcript)
+        bar.progress(100)
         
         st.session_state.transcript = transcript
-        progress_bar.progress(60)
-        
-        # Extract keywords
-        status.info("🔍 Extracting key concepts...")
-        progress_bar.progress(70)
-        keywords = extract_keywords(transcript, max_keywords=8)
         st.session_state.keywords = keywords
-        
-        # Generate notes
-        status.info("🤖 Generating structured notes...")
-        progress_bar.progress(85)
-        
-        notes = generate_notes(transcript)
-        
-        if not notes:
-            st.error("⚠️ Note generation failed.")
-            return False
-        
         st.session_state.notes = notes
-        
-        # Store file info
         st.session_state.file_info = {
             'name': filename,
             'word_count': len(transcript.split()),
-            'char_count': len(transcript)
+            'reading_time': round(len(transcript.split()) / 200)
         }
         
-        progress_bar.progress(100)
-        status.success("✅ Notes generated successfully!")
-        
-        time.sleep(1)
-        
-        # Redirect to results
         st.session_state.page = 'results'
         st.rerun()
-        
-        return True
-        
     except Exception as e:
-        st.error(f"❌ Error: {str(e)}")
-        with st.expander("View detailed error"):
-            st.code(traceback.format_exc())
-        return False
+        st.error(f"Processing error: {e}")
 
 def upload_page():
-    """Upload page with glassmorphism"""
+    st.markdown('<div class="main-header"><h1 class="app-title">LectureAI</h1><p style="color: #636E72;">Your personal academic scribe</p></div>', unsafe_allow_html=True)
     
-    # Header
-    st.markdown("""
-        <div class="glass-header">
-            <h1 class="app-title">LectureAI</h1>
-            <p class="app-subtitle">Transform lectures into structured notes with AI</p>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    # Check API keys
-    missing_keys = validate_api_keys()
-    if missing_keys:
-        st.markdown(f'''
-            <div class="error-glass">
-                <strong>⚠️ Missing API Keys:</strong> {', '.join(missing_keys)}<br>
-                Add them in <strong>Settings → Secrets</strong> on Streamlit Cloud
-            </div>
-        ''', unsafe_allow_html=True)
-        with st.expander("📖 Setup guide"):
-            st.code("""
-ASSEMBLYAI_API_KEY = "your_key"
-GROQ_API_KEY = "your_key"
-            """)
-        return
-    
-    # Upload card
-    st.markdown("""
-        <div class="glass-card">
-            <h3>📁 Upload Your Lecture Audio</h3>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    uploaded_file = st.file_uploader(
-        "Choose audio file",
-        type=['mp3', 'wav', 'm4a', 'mp4', 'flac', 'ogg'],
-        help="MP3, WAV, M4A, MP4, FLAC, OGG",
-        label_visibility="collapsed"
-    )
-    
-    if uploaded_file:
-        file_size = uploaded_file.size / (1024 * 1024)
-        st.markdown(f'''
-            <div class="success-glass">
-                <strong>✅ Ready:</strong> {uploaded_file.name} ({file_size:.2f} MB)
-            </div>
-        ''', unsafe_allow_html=True)
-        
-        if st.button("🚀 Generate Notes"):
-            with tempfile.NamedTemporaryFile(delete=False, suffix=Path(uploaded_file.name).suffix) as tmp:
-                tmp.write(uploaded_file.getvalue())
-                tmp_path = tmp.name
-            
-            try:
-                process_audio_file(tmp_path, uploaded_file.name)
-            finally:
-                if os.path.exists(tmp_path):
-                    os.unlink(tmp_path)
-    
-    # Info
-    st.markdown("""
-        <div class="info-glass">
-            <strong>💡 How it works:</strong><br>
-            1️⃣ Upload audio → 2️⃣ AI processes → 3️⃣ Get structured notes
-        </div>
-    """, unsafe_allow_html=True)
-    
-    # Features
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown("""
-            <div class="stat-glass">
-                <div class="stat-icon">🎙️</div>
-                <div class="stat-label">AI Transcription</div>
-            </div>
-        """, unsafe_allow_html=True)
-    
+    col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.markdown("""
-            <div class="stat-glass">
-                <div class="stat-icon">📝</div>
-                <div class="stat-label">Smart Notes</div>
-            </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown("""
-            <div class="stat-glass">
-                <div class="stat-icon">💾</div>
-                <div class="stat-label">Export Options</div>
-            </div>
-        """, unsafe_allow_html=True)
+        uploaded_file = st.file_uploader("Upload lecture (MP3, WAV, M4A)", type=['mp3', 'wav', 'm4a'], label_visibility="collapsed")
+        
+        if uploaded_file:
+            st.info(f"📁 Selected: {uploaded_file.name}")
+            if st.button("Generate My Notes", use_container_width=True):
+                with tempfile.NamedTemporaryFile(delete=False, suffix=Path(uploaded_file.name).suffix) as tmp:
+                    tmp.write(uploaded_file.getvalue())
+                    process_audio_file(tmp.name, uploaded_file.name)
 
 def results_page():
-    """Results page with glassmorphism"""
-    
-    if not st.session_state.notes:
-        st.session_state.page = 'upload'
-        st.rerun()
-        return
-    
-    # Header
-    col1, col2 = st.columns([4, 1])
-    
-    with col1:
-        st.markdown("""
-            <div class="results-glass-header">
-                <div class="results-title">📖 Your Notes</div>
-            </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        if st.button("← Back", key="back_btn", use_container_width=True):
+    # Top Action Bar
+    t1, t2 = st.columns([5, 1])
+    with t1:
+        st.markdown(f"### 📝 {st.session_state.file_info.get('name')}")
+    with t2:
+        if st.button("New Upload", use_container_width=True):
             st.session_state.page = 'upload'
-            st.session_state.notes = None
-            st.session_state.transcript = None
             st.rerun()
-    
-    # Layout: Sidebar + Content
-    col_side, col_main = st.columns([1, 2.5])
-    
-    with col_side:
-        # Stats
-        st.markdown("""
-            <div class="sidebar-glass">
-                <div class="sidebar-title">📊 Statistics</div>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        if st.session_state.file_info:
-            st.markdown(f"""
-                <div class="stat-glass">
-                    <div class="stat-icon">{st.session_state.file_info.get('word_count', 0):,}</div>
-                    <div class="stat-label">Words</div>
-                </div>
-            """, unsafe_allow_html=True)
-        
-        # Keywords
-        st.markdown("""
-            <div class="sidebar-glass">
-                <div class="sidebar-title">🏷️ Key Concepts</div>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        if st.session_state.keywords:
-            for i, kw in enumerate(st.session_state.keywords):
-                badge_class = "keyword-badge-alt" if i % 2 == 0 else "keyword-badge"
-                st.markdown(f'<span class="{badge_class}">{kw}</span>', unsafe_allow_html=True)
-        
-        # Transcript
-        st.markdown("""
-            <div class="sidebar-glass">
-                <div class="sidebar-title">📜 Transcript</div>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        with st.expander("View transcript"):
-            st.text_area(
-                "Transcript",
-                st.session_state.transcript,
-                height=250,
-                label_visibility="collapsed"
-            )
-        
-        # Downloads
-        st.markdown("""
-            <div class="sidebar-glass">
-                <div class="sidebar-title">💾 Downloads</div>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        st.download_button(
-            "📥 TXT",
-            st.session_state.notes,
-            "notes.txt",
-            use_container_width=True
-        )
-        
-        formatted = format_notes(st.session_state.notes)
-        st.download_button(
-            "📥 Markdown",
-            formatted,
-            "notes.md",
-            use_container_width=True
-        )
+
+    # Dashboard Metrics
+    m1, m2, m3 = st.columns(3)
+    with m1:
+        st.markdown(f'<div class="stat-card"><div class="stat-label">Word Count</div><div class="stat-value">{st.session_state.file_info.get("word_count")}</div></div>', unsafe_allow_html=True)
+    with m2:
+        st.markdown(f'<div class="stat-card"><div class="stat-label">Est. Reading Time</div><div class="stat-value">{st.session_state.file_info.get("reading_time")} min</div></div>', unsafe_allow_html=True)
+    with m3:
+        st.markdown(f'<div class="stat-card"><div class="stat-label">AI Confidence</div><div class="stat-value">High</div></div>', unsafe_allow_html=True)
+
+    # Content Area
+    col_main, col_side = st.columns([3, 1])
     
     with col_main:
-        # Notes
         sections = extract_sections(st.session_state.notes)
-        
-        for section_title, section_content in sections.items():
-            st.markdown(f"""
-                <div class="topic-glass">
-                    <div class="topic-header">{section_title}</div>
-                </div>
-            """, unsafe_allow_html=True)
+        for title, content in sections.items():
+            st.markdown(f'<div class="note-section"><div class="section-title">{title}</div>', unsafe_allow_html=True)
             
-            if "Theory:" in section_content or "**Theory:**" in section_content:
-                parts = section_content.split("Example:")
-                theory = parts[0].replace("Theory:", "").replace("**Theory:**", "").strip()
-                
-                st.markdown(f'<div class="theory-glass"><strong>💡 Theory:</strong> {theory}</div>', 
-                          unsafe_allow_html=True)
-                
+            # Smart split for Theory/Example
+            if "Theory:" in content:
+                parts = content.split("Example:")
+                theory = parts[0].replace("Theory:", "").strip()
+                st.markdown(f'<div class="theory-box"><b>💡 Core Concept:</b><br>{theory}</div>', unsafe_allow_html=True)
                 if len(parts) > 1:
-                    example = parts[1].replace("**Example:**", "").strip()
-                    st.markdown(f'<div class="example-glass"><strong>✨ Example:</strong> {example}</div>', 
-                              unsafe_allow_html=True)
+                    example = parts[1].strip()
+                    st.markdown(f'<div class="example-box"><b>📝 Case/Example:</b><br>{example}</div>', unsafe_allow_html=True)
             else:
-                st.markdown(section_content)
+                st.markdown(content)
+            st.markdown('</div>', unsafe_allow_html=True)
+
+    with col_side:
+        st.markdown("##### 🏷️ Key Concepts")
+        for kw in st.session_state.keywords:
+            st.markdown(f'<span class="badge">{kw}</span>', unsafe_allow_html=True)
+        
+        st.divider()
+        st.markdown("##### 💾 Export")
+        st.download_button("Download Markdown", st.session_state.notes, "notes.md", use_container_width=True)
+        
+        with st.expander("📜 Raw Transcript"):
+            st.caption(st.session_state.transcript)
 
 def main():
     initialize_session_state()
-    
     if st.session_state.page == 'upload':
         upload_page()
     else:
