@@ -15,7 +15,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- LUXURY UI STYLING (V2 - UI FIXES) ---
+# --- PREMIUM UI STYLING ---
 st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
@@ -24,13 +24,13 @@ st.markdown("""
         --accent: #FF6B6B;
         --accent-gradient: linear-gradient(135deg, #FF6B6B 0%, #FF8E72 100%);
         --bg-soft: #FDFCFB;
-        --card-shadow: 0 10px 30px rgba(0,0,0,0.04);
     }
 
     * { font-family: 'Plus Jakarta Sans', sans-serif; }
+    
     .stApp { background: var(--bg-soft); }
 
-    /* Centering the File Uploader (UI FIX) */
+    /* Center the Uploader & Style it (UI FIX) */
     [data-testid="stFileUploader"] {
         background: white;
         border: 2px dashed #E2E8F0;
@@ -58,7 +58,7 @@ st.markdown("""
         text-align: center;
     }
 
-    /* Metric Grid (Glass Effect) */
+    /* Metric Cards (UI FIX) */
     .metric-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -71,16 +71,16 @@ st.markdown("""
         padding: 1.5rem;
         border-radius: 24px;
         border-bottom: 5px solid var(--accent);
-        box-shadow: var(--card-shadow);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.04);
     }
 
-    /* Note Cards & Module Tags (UI FIX) */
+    /* Note Card & Module Tags (UI FIX) */
     .note-card {
         background: white;
         border-radius: 28px;
         padding: 2.5rem;
         margin-bottom: 1.5rem;
-        box-shadow: var(--card-shadow);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.04);
         border: 1px solid #F1F5F9;
     }
 
@@ -97,37 +97,34 @@ st.markdown("""
         margin-bottom: 1rem;
     }
 
-    /* Keywords Sidebar (Modern Pills) */
+    /* Keyword Sidebar Pills (UI FIX) */
     .keyword-pill {
         background: white;
-        color: #4A5568;
+        color: var(--accent);
         padding: 8px 18px;
         border-radius: 100px;
         font-size: 0.85rem;
         font-weight: 600;
-        border: 1px solid #EDF2F7;
+        border: 1px solid #FFDADA;
         margin: 5px;
         display: inline-block;
         box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        transition: 0.2s;
-    }
-    
-    .keyword-pill:hover {
-        border-color: var(--accent);
-        color: var(--accent);
     }
 
     /* Button Polish */
     .stButton > button {
-        border-radius: 16px !important;
+        border-radius: 14px !important;
         font-weight: 700 !important;
+        background: var(--accent-gradient) !important;
+        color: white !important;
+        border: none !important;
         transition: 0.3s ease !important;
     }
 
-    /* Scrollbar */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: #f1f1f1; }
-    ::-webkit-scrollbar-thumb { background: #FFB3B3; border-radius: 10px; }
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3) !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -136,14 +133,14 @@ def initialize_session_state():
         if key not in st.session_state: st.session_state[key] = val
 
 def process_audio_logic(path, name):
-    with st.status("🔮 Analyzing Lecture Content...", expanded=True) as status:
+    with st.status("🔮 Analyzing Lecture...", expanded=True) as status:
         st.write("🎙️ Transcribing audio...")
         transcript = transcribe_audio(path)
         
-        st.write("🔍 Identifying key concepts...")
+        st.write("🔍 Extracting concepts...")
         keywords = extract_keywords(transcript)
         
-        st.write("✍️ Formatting smart notes...")
+        st.write("✍️ Generating smart notes...")
         notes = generate_notes(transcript)
         
         word_count = len(transcript.split())
@@ -155,39 +152,38 @@ def process_audio_logic(path, name):
             },
             'page': 'results'
         })
-        status.update(label="Lecture Processed!", state="complete")
+        status.update(label="Complete!", state="complete")
         time.sleep(0.5)
         st.rerun()
 
 def upload_page():
     st.markdown('<h1 class="hero-title">LectureAI</h1>', unsafe_allow_html=True)
-    st.markdown('<p style="text-align:center; color:#64748B; margin-bottom:3rem;">Smart Knowledge Extraction for Modern Learning</p>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align:center; color:#64748B; margin-bottom:3rem;">Smart Knowledge Extraction</p>', unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         uploaded_file = st.file_uploader("Upload", type=['mp3', 'wav', 'm4a', 'mp4'], label_visibility="collapsed")
         if uploaded_file:
-            st.markdown(f"<div style='text-align:center; padding: 1.5rem;'>📄 <b>{uploaded_file.name}</b></div>", unsafe_allow_html=True)
-            if st.button("✨ Start Analysis", use_container_width=True):
+            st.markdown(f"<div style='text-align:center; padding: 1rem;'>📄 <b>{uploaded_file.name}</b></div>", unsafe_allow_html=True)
+            if st.button("🚀 Start Analysis", use_container_width=True):
                 with tempfile.NamedTemporaryFile(delete=False, suffix=Path(uploaded_file.name).suffix) as tmp:
                     tmp.write(uploaded_file.getvalue())
                     process_audio_logic(tmp.name, uploaded_file.name)
 
 def results_page():
-    # Header Row
-    c1, c2 = st.columns([5, 1])
+    # Header row with Icon and New Scan button
+    c1, c2 = st.columns([5, 1.2])
     with c1: st.markdown(f"<h1>📖 {st.session_state.file_info['name']}</h1>", unsafe_allow_html=True)
     with c2: 
         if st.button("New Scan", use_container_width=True):
-            st.session_state.page = 'upload'
-            st.rerun()
+            st.session_state.page = 'upload'; st.rerun()
 
-    # Metrics Grid
+    # Metric Row
     st.markdown(f"""
     <div class="metric-grid">
-        <div class="metric-item"><small style='color:#64748B; letter-spacing:1px;'>WORDS ANALYZED</small><br><b style='font-size:1.8rem;'>{st.session_state.file_info['words']}</b></div>
-        <div class="metric-item"><small style='color:#64748B; letter-spacing:1px;'>READING TIME</small><br><b style='font-size:1.8rem;'>{st.session_state.file_info['time']}</b></div>
-        <div class="metric-item"><small style='color:#64748B; letter-spacing:1px;'>TOPIC COVERAGE</small><br><b style='font-size:1.8rem;'>Comprehensive</b></div>
+        <div class="metric-item"><small style='color:#64748B'>WORDS ANALYZED</small><br><b style='font-size:1.8rem;'>{st.session_state.file_info['words']}</b></div>
+        <div class="metric-item"><small style='color:#64748B'>READING TIME</small><br><b style='font-size:1.8rem;'>{st.session_state.file_info['time']}</b></div>
+        <div class="metric-item"><small style='color:#64748B'>TOPIC COVERAGE</small><br><b style='font-size:1.8rem;'>Comprehensive</b></div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -196,23 +192,23 @@ def results_page():
     with col_main:
         sections = extract_sections(st.session_state.notes)
         for i, (title, content) in enumerate(sections.items()):
-            # Clean formatting for UI
-            formatted_content = content.replace('Theory:', '<b>💡 Theory:</b>').replace('Example:', '<br><br><b>✨ Example:</b>')
-            st.markdown(f"""
-            <div class="note-card">
-                <span class="section-tag">MODULE {i+1}</span>
-                <h2 style='margin-top:0;'>{title}</h2>
-                <div style='color: #4A5568; line-height: 1.8;'>{formatted_content}</div>
-            </div>
-            """, unsafe_allow_html=True)
+            # Using st.container for styling while st.markdown handles the asterisks fix
+            with st.container():
+                st.markdown(f'<div class="note-card"><span class="section-tag">MODULE {i+1}</span><h2 style="margin:0 0 1rem 0;">{title}</h2>', unsafe_allow_html=True)
+                
+                # FIX: st.markdown renders the **Bold** text correctly instead of raw text
+                st.markdown(content)
+                
+                st.markdown('</div>', unsafe_allow_html=True)
 
     with col_side:
         st.markdown("#### 🏷️ Key Concepts")
+        # Generate the HTML for the pills
         kw_html = "".join([f'<span class="keyword-pill">{kw}</span>' for kw in st.session_state.keywords])
-        st.markdown(kw_html if kw_html else "Detecting...", unsafe_allow_html=True)
+        st.markdown(f'<div style="line-height:2.2;">{kw_html}</div>', unsafe_allow_html=True)
         
-        st.markdown("<br>#### 📥 Actions", unsafe_allow_html=True)
-        st.download_button("Download Study Guide (.md)", st.session_state.notes, file_name="notes.md", use_container_width=True)
+        st.markdown("<br>#### 📥 Export Data", unsafe_allow_html=True)
+        st.download_button("Download .MD", st.session_state.notes, file_name="notes.md", use_container_width=True)
         
         with st.expander("📜 Raw Transcript"):
             st.caption(st.session_state.transcript)
