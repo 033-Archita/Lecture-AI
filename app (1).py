@@ -197,7 +197,7 @@ def upload_page():
     
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        uploaded_file = st.file_uploader("Upload lecture (MP3, WAV, M4A)", type=['mp3', 'wav', 'm4a'], label_visibility="collapsed")
+        uploaded_file = st.file_uploader("Upload lecture (MP3, WAV, M4A,MP4)", type=['mp3', 'wav', 'm4a','mp4'], label_visibility="collapsed")
         
         if uploaded_file:
             st.info(f"📁 Selected: {uploaded_file.name}")
